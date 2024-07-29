@@ -22,7 +22,7 @@ public class MinecraftPlayer {
     private final String skinURL;
 
     public static final String apiURL_1 = "https://api.mojang.com/users/profiles/minecraft/%name%";
-    public static final String apiURL_2 = "https://api.mojang.com/user/profiles/%uuid%/names";
+    public static final String apiURL_2 = "https://api.mojang.com/user/profile/%uuid%";
     private static final String apiURL_3 = "https://sessionserver.mojang.com/session/minecraft/profile/%uuid%?unsigned=false";
 
     public MinecraftPlayer(String arg) throws MinecraftPlayerAPI.NoSuchPlayerException {
@@ -113,17 +113,10 @@ public class MinecraftPlayer {
     }
 
     public static String getName(String json) {
-        if(isJSONArray(json)) {
-            JSONArray jsonArray = new JSONArray(json);
-            List<JSONObject> list = new ArrayList<>();
-            for (int i=0;i<jsonArray.length();i++){
-                list.add(jsonArray.getJSONObject(i));
-            }
-
-            Collections.reverse(list);
-            JSONObject newest = list.get(0);
-            if(newest.has("name")) {
-                return newest.getString("name");
+        if(isJSONObject(json)) {
+            JSONObject jsonObject = new JSONObject(json);
+            if(jsonObject.has("name")) {
+                return jsonObject.getString("name");
             }
         }
         return null;
